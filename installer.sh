@@ -17,6 +17,9 @@ echo '>>> Setup Firewall <<<'
 sudo ufw allow ssh
 
 echo '>>> Setup reverse SSH tunnel <<<'
-mkdir ~/.ssh
+ssh -f -N -R 5050:localhost:1883 ubuntu@13.213.41.188 -i AWS-Widya.pem 
+
+echo '>>> Run main.py <<<'
+python3 main.py
 
 echo '>>> Installation Finished <<<'
