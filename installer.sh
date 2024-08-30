@@ -23,3 +23,4 @@ echo '>>> Run main.py <<<'
 python3 main.py
 
 echo '>>> Installation Finished <<<'
+echo 'Now you can install Node-RED and import flows.json'
