@@ -14,6 +14,7 @@ echo '>>> Raspberry configurations <<<'
 sudo raspi-config nonint do_i2c 0
 
 echo '>>> Setup Firewall <<<'
+sudo apt install -y ufw=0.36-7.1
 sudo ufw allow ssh
 
 echo '>>> Setup reverse SSH tunnel <<<'
@@ -23,4 +24,4 @@ echo '>>> Run main.py <<<'
 python3 main.py
 
 echo '>>> Installation Finished <<<'
-echo 'Now you can install Node-RED and import flows.json'
+echo 'Now you can install Node-RED on client device and import flows.json'
