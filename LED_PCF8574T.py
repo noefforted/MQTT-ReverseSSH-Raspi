@@ -1,8 +1,8 @@
-import smbus
+import smbus2
 
 PCF_address = 0x20
 
-bus = smbus.SMBus(1)
+bus = smbus2.SMBus(1)
 
 led_states = [0]*8
 

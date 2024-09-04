@@ -18,9 +18,9 @@ def on_connect_subscribe(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print(f'Message diterima: {msg.topic} {msg.payload.decode()}')
     try:
-        led_index = int(msg.topic.split('/')[-1]) - 1  # Extract LED index from the topic
-        led_state = msg.payload.decode().lower() == '1'  # True or False based on MQTT payload ('1' or '0')
-        update_led_states(led_index, led_state)  # Update the LED state
+        led_index = int(msg.topic.split('/')[-1]) - 1 
+        led_state = msg.payload.decode().lower() == '1' 
+        update_led_states(led_index, led_state)  
     except (IndexError, ValueError) as e:
         print(f'Error processing message: {e}')
 
