@@ -1,5 +1,5 @@
 CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+NC='\033[0m' 
 
 echo "${CYAN}>>> Installation begin... <<<${NC}"
 sleep 2
