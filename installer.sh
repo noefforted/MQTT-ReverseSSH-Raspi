@@ -12,8 +12,11 @@ sudo apt update
 echo "${CYAN}>>> Installing Mosquitto <<<${NC}"
 sudo apt install -y mosquitto
 
+echo "${CYAN}>>> Installing Node.js and npm <<<${NC}"
+sudo apt install -y nodejs
+
 echo "${CYAN}>>> Making Virtual Environment <<<${NC}"
-python -m venv venv
+python3 -m venv venv
 . venv/bin/activate
 
 echo "${CYAN}>>> Installing GPIO library <<<${NC}"
@@ -35,17 +38,16 @@ chmod 400 AWS-Widya.pem
 echo "${CYAN}>>> Setup reverse SSH tunnel <<<${NC}"
 ssh -f -N -R 5050:localhost:1883 ubuntu@13.213.41.188 -i AWS-Widya.pem 
 
-echo "${CYAN}>>> Installing Node.js and npm <<<${NC}"
-sudo apt install -y nodejs
-
 echo "${CYAN}>>> Installing PM2 <<<${NC}"
 sudo npm install -g pm2
 
 echo "${CYAN}>>> Setting up PM2 to run main.py after reboot <<<${NC}"
 pm2 start python3 --name dhtled -- main.py
-pm2 save
 pm2 startup
+pm2 save
 sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u $(whoami) --hp $(eval echo ~$(whoami))
+sudo pm2 startup
+sudo pm2 save
 
-echo "${CYAN}>>> Installation Finished <<<${NC}"
+echo "${CYAN}>>> Installation Completed <<<${NC}"
 echo "${CYAN}Now you can install Node-RED on client device and import flows.json${NC}"
