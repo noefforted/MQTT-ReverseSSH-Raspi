@@ -12,6 +12,7 @@ echo "${CYAN}>>> Setting up machine... <<<${NC}"
 chmod +x ./machine/main.py
 
 echo "${CYAN}>>> Setting up key tunnel... <<<${NC}"
+mkdir ~/.ssh
 ssh-keyscan -t rsa 13.213.41.188 >> ~/.ssh/known_hosts
 chmod 400 ./key/AWS-Widya.pem
 
@@ -53,7 +54,8 @@ sudo pm2 startup
 
 echo "${CYAN}>>> Setting up PM2 non-sudo <<<${NC}"
 pm2 start -f ./machine/main.py
-pm2 start -f ./service/reverse-ssh.json
+# pm2 start -f ./service/reverse-ssh.json
+pm2 start ssh -- -f -N -R 5050:localhost:1883 ubuntu@13.213.41.188 -i ./key/AWS-Widya.pem
 pm2 save
 sudo pm2 save 
 
