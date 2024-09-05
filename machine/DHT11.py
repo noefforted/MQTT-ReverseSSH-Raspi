@@ -1,7 +1,7 @@
 import adafruit_dht
 import board
 
-sensor = adafruit_dht.DHT11(board.D4, use_pulseio = True)
+sensor = adafruit_dht.DHT11(board.D4, use_pulseio = False)
 
 
 def read_dht():
