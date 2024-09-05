@@ -8,9 +8,16 @@ sleep 2
 echo "${CYAN}>>> Updating... <<<${NC}"
 sudo apt update
 
-echo "${CYAN}>>> Setting up machine and key... <<<${NC}"
+echo "${CYAN}>>> Setting up machine... <<<${NC}"
 chmod +x ./machine/main.py
+
+echo "${CYAN}>>> Setting up key tunnel... <<<${NC}"
+ssh-keyscan -t rsa 13.213.41.188 >> ~/.ssh/known_hosts
 chmod 400 ./key/AWS-Widya.pem
+
+echo "${CYAN}>>> Setting up Reverse SSH... <<<${NC}"
+mkdir ~/.ssh
+chmod 600 ~/.ssh/known_hosts
 
 echo "${CYAN}>>> Installing Mosquitto <<<${NC}"
 sudo apt install -y mosquitto
@@ -48,7 +55,7 @@ echo "${CYAN}>>> Setting up PM2 non-sudo <<<${NC}"
 pm2 start -f ./machine/main.py
 pm2 start -f ./service/reverse-ssh.json
 pm2 save
-sudo pm2 save
+sudo pm2 save 
 
 echo "${CYAN}>>> Installation Completed <<<${NC}"
 echo "${YELLOW}====Now you can install Node-RED on client device and import flows.json====${NC}"
