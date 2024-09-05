@@ -4,6 +4,7 @@
     "restart_delay": 10000,
     "max_restarts": 65535,
     "args": [
+        "-f",
         "-N",
         "-R",
         "5050:localhost:1883",
