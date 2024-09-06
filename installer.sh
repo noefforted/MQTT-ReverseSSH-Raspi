@@ -64,8 +64,10 @@ echo "${CYAN}>>> Saving PM2 process list... <<<${NC}"
 pm2 save
 
 echo "${CYAN}>>> Configuring PM2 to run on startup... <<<${NC}"
+pm2 startup
 # PM2 Startup Settings
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $USERNAME --hp $HOMEPATH
+# sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $USERNAME --hp $HOMEPATH
+sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u $USERNAME --hp $HOMEPATH
 
 echo "${CYAN}>>> Setup Firewall... <<<${NC}"
 sudo apt install -y ufw=0.36-7.1
