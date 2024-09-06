@@ -12,6 +12,7 @@ sudo apt update
 
 echo "${CYAN}>>> Setting up machine... <<<${NC}"
 chmod +x ./machine/main.py
+chmod +x ./service/reverse-ssh.sh
 
 echo "${CYAN}>>> Setting up key tunnel... <<<${NC}"
 # Ensure .ssh directory exists
@@ -22,6 +23,7 @@ ssh-keyscan -t rsa 13.213.41.188 >> ~/.ssh/known_hosts
 chmod 600 ~/.ssh/known_hosts
 
 # Set the correct permissions for the private key
+chmod 700 ~/.ssh
 chmod 400 ./key/AWS-Widya.pem
 
 echo "${CYAN}>>> Installing Mosquitto... <<<${NC}"
@@ -44,28 +46,29 @@ pip3 install -r requirements.txt
 echo "${CYAN}>>> Raspberry configuration... <<<${NC}"
 sudo raspi-config nonint do_i2c 0
 
-echo "${CYAN}>>> Setup Firewall... <<<${NC}"
-sudo apt install -y ufw=0.36-7.1
-sudo ufw allow ssh
-
 echo "${CYAN}>>> Installing PM2... <<<${NC}"
 sudo npm install -g pm2
 
 echo "${CYAN}>>> Configuring PM2 to run on startup... <<<${NC}"
 pm2 startup
 
-# Corrected PM2 startup command (make sure the paths are correct and properly formatted)
+# PM2 Settings
 sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $(whoami) --hp $(eval echo ~$(whoami))
+sudo pm2 startup
 
 echo "${CYAN}>>> Setting up PM2 services... <<<${NC}"
 # Start the main Python script with PM2
 pm2 start -f ./machine/main.py --name main-script
-
 # Start the reverse SSH tunnel service with PM2
-pm2 start ssh --name reverse-ssh -- -f -N -R 5050:localhost:1883 ubuntu@13.213.41.188 -i ./key/AWS-Widya.pem
+# pm2 start -f ./service/reverse-ssh.json
+# pm2 start ssh --name reverse-ssh -- -o "StrictHostKeyChecking=no" -f -N -R 5050:localhost:1883 ubuntu@13.213.41.188 -i ./key/AWS-Widya.pem
+pm2 start -f ./service/reverse-ssh.sh --name reverse-ssh
+sudo pm2 save --force
+pm2 save --force
 
-# Save PM2 process list
-pm2 save
+echo "${CYAN}>>> Setup Firewall... <<<${NC}"
+sudo apt install -y ufw=0.36-7.1
+sudo ufw allow ssh
 
 echo "${CYAN}>>> Installation Completed <<<${NC}"
 echo "${YELLOW}====Now you can install Node-RED on client device and import flows.json====${NC}"

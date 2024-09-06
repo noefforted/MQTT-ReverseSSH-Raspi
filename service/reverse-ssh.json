@@ -8,7 +8,7 @@
         "-R",
         "5050:localhost:1883",
         "-i",
-        "../key/AWS-Widya.pem",
+        "./key/AWS-Widya.pem",
         "ubuntu@13.213.41.188"
     ]
 }
