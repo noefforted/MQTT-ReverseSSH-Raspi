@@ -49,22 +49,20 @@ sudo raspi-config nonint do_i2c 0
 echo "${CYAN}>>> Installing PM2... <<<${NC}"
 sudo npm install -g pm2
 
-echo "${CYAN}>>> Configuring PM2 to run on startup... <<<${NC}"
-pm2 startup
-
-# PM2 Settings
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $(whoami) --hp $(eval echo ~$(whoami))
-sudo pm2 startup
-
 echo "${CYAN}>>> Setting up PM2 services... <<<${NC}"
 # Start the main Python script with PM2
-pm2 start -f ./machine/main.py --name main-script
+pm2 start ./machine/main.py --name main-script
 # Start the reverse SSH tunnel service with PM2
 # pm2 start -f ./service/reverse-ssh.json
 # pm2 start ssh --name reverse-ssh -- -o "StrictHostKeyChecking=no" -f -N -R 5050:localhost:1883 ubuntu@13.213.41.188 -i ./key/AWS-Widya.pem
-pm2 start -f ./service/reverse-ssh.sh --name reverse-ssh
-sudo pm2 save --force
-pm2 save --force
+pm2 start ./service/reverse-ssh.sh --name reverse-ssh
+
+echo "${CYAN}>>> Saving PM2 process list... <<<${NC}"
+pm2 save
+
+echo "${CYAN}>>> Configuring PM2 to run on startup... <<<${NC}"
+# PM2 Startup Settings
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $(whoami) --hp $(eval echo ~$(whoami))
 
 echo "${CYAN}>>> Setup Firewall... <<<${NC}"
 sudo apt install -y ufw=0.36-7.1
