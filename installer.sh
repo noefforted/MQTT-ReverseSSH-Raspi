@@ -4,6 +4,9 @@ CYAN='\e[36m'
 YELLOW='\e[33m'
 NC='\e[0m'
 
+USERNAME=$(whoami)
+HOMEPATH=$(eval echo ~$USERNAME)
+
 echo "${CYAN}>>> Installation begin... <<<${NC}"
 sleep 2
 
@@ -62,7 +65,7 @@ pm2 save
 
 echo "${CYAN}>>> Configuring PM2 to run on startup... <<<${NC}"
 # PM2 Startup Settings
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $(whoami) --hp $(eval echo ~$(whoami))
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u $USERNAME --hp $HOMEPATH
 
 echo "${CYAN}>>> Setup Firewall... <<<${NC}"
 sudo apt install -y ufw=0.36-7.1
